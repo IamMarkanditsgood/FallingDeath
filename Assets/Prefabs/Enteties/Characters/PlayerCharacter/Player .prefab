@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1030109938123658837}
   - component: {fileID: 3323187548004437416}
   - component: {fileID: 1993674761018695423}
-  - component: {fileID: 308247400846111565}
+  - component: {fileID: 7174732817027869695}
   - component: {fileID: 8258853893416298193}
   - component: {fileID: 3494112593958210674}
   m_Layer: 0
@@ -77,8 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee,
-    type: 3}
+  m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -116,8 +115,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!70 &308247400846111565
-CapsuleCollider2D:
+--- !u!58 &7174732817027869695
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -149,8 +148,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
-  m_Direction: 0
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!114 &8258853893416298193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,7 +165,7 @@ MonoBehaviour:
   _mainCamera: {fileID: 0}
   _movementEngine:
     _rigidbody: {fileID: 1993674761018695423}
-    _collider: {fileID: 308247400846111565}
+    _collider: {fileID: 7174732817027869695}
   _playerInputSystem:
     _logInputEvents: 0
 --- !u!114 &3494112593958210674

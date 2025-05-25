@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class CharacterPlayerController : MonoBehaviour, IHitable, ICustomisable
@@ -67,9 +66,6 @@ public class CharacterPlayerController : MonoBehaviour, IHitable, ICustomisable
 
         CalculateScreenBounds();
         HandleScreenWrapping();
-        CheckFallDeath();
-
-        _movementEngine.CheckGroundStatus(_playerConfig.ContactNormalThreshold);
     }
 
     private void FixedUpdate()
@@ -90,50 +86,24 @@ public class CharacterPlayerController : MonoBehaviour, IHitable, ICustomisable
 
     private void HandleCollision(Collision2D collision)
     {
-        if(!IsInteractableCollision(collision)) return;
+        if(!IsInteractableTag(collision)) return;
         
-        if (IsCollisionBelow(collision, _playerConfig.ContactNormalThreshold))
-        {
-
-            _movementEngine.Jump(_playerConfig.JumpForce);
-        }
     }
 
     private void HandleTrigger(Collider2D collider)
     {
-        if (!IsInLayerMask(collider.gameObject, _playerConfig.BoosterLayers)) return;
+        if (!IsInteractableMask(collider.gameObject, _playerConfig.BoosterLayers)) return;
 
-        BasicBoosterController booster = collider.gameObject.GetComponent<BasicBoosterController>();
-        if (booster != null)
-            TryToUseBooster(booster);
     }
 
-    private bool IsInteractableCollision(Collision2D collision)
+    private bool IsInteractableTag(Collision2D collision)
     {
         return collision.gameObject.CompareTag(GameTags.instantiate.PlatformTag) ||
            collision.gameObject.CompareTag(GameTags.instantiate.EnemyTag);
     }
-    private bool IsInLayerMask(GameObject obj, LayerMask mask)
+    private bool IsInteractableMask(GameObject obj, LayerMask mask)
     {
         return (mask.value & (1 << obj.layer)) != 0;
-    }
-
-    private bool IsCollisionBelow(Collision2D collision, float tolerance)
-    {
-        foreach (ContactPoint2D contact in collision.contacts)
-        {
-            if (contact.normal.y > tolerance)
-            {
-                return true;
-            }
-        }
-        return false;
-
-    }
-    private bool IsColliderBelow(Collider2D collider, float tolerance, Transform self)
-    {
-        Vector2 directionToCollider = (collider.bounds.center - self.position).normalized;
-        return directionToCollider.y < tolerance;
     }
 
     private void OnMoveInput(Vector2 direction)
@@ -156,14 +126,6 @@ public class CharacterPlayerController : MonoBehaviour, IHitable, ICustomisable
             transform.position = new Vector2(_screenWidthInUnits, transform.position.y);
     }
 
-    private void CheckFallDeath()
-    {
-        float cameraBottom = _mainCamera.transform.position.y - _mainCamera.orthographicSize;
-        if (transform.position.y < cameraBottom - _playerConfig.DeathDistanceBelowCamera)
-        {
-            Die();
-        }
-    }
     private void Die()
     {
         Debug.Log("Player Died!");
@@ -180,24 +142,5 @@ public class CharacterPlayerController : MonoBehaviour, IHitable, ICustomisable
             Die();
         }
     }
-
-    private void TryToUseBooster(BasicBoosterController booster)
-    {
-        booster.Interact();
-
-        switch(booster.BoosterConfig.BoosterType)
-        {
-            case BoosterTypes.Spring:
-                _boosterUseManager.UseSpring(booster.BoosterConfig);
-                break;
-            case BoosterTypes.Helicopter:
-                _boosterUseManager.UseHelicopter(booster.BoosterConfig);
-                break;
-            case BoosterTypes.Jetpack:
-                _boosterUseManager.UseJetpack(booster.BoosterConfig);
-                break;
-        }
-    }
-
     
 }
