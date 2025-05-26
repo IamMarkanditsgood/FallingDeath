@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7c10744a95e4bb4eac0c18cd2ab7c72, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  _jumpForce: 10
-  _moveSpeed: 5
-  _deathDistanceBelowCamera: 2
-  _contactNormalThreshold: 0.1
-  _basicHealth: 0
+  _moveSpeed: 10
+  _basicHealth: 1
+  _basicDamage: 1
+  _basicShootingSpeed: 1
   _boosterLayers:
     serializedVersion: 2
     m_Bits: 128

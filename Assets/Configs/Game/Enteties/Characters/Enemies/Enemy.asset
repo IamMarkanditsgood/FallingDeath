@@ -9,12 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d32dbe14025791a4b8b53735b23c059d, type: 3}
-  m_Name: MovablePlatform
+  m_Script: {fileID: 11500000, guid: acf9b3610e2f9124bb21567c8e35a668, type: 3}
+  m_Name: Enemy
   m_EditorClassIdentifier: 
-  _platformType: 2
-  _basicSpeed: 5
-  _useCustomMovementLimits: 0
-  _leftMovementLimit: -5
-  _righMovementtLimit: 5
-  _startDirection: 1
+  _enemyType: 0
+  _canDie: 1
+  _movementSpeed: 5
+  _movementDirection: {x: 0, y: -1}
+  _groundTag: Ground
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _basicDamage: 1

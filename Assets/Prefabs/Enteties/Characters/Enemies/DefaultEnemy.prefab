@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 6600513302788961215}
   - component: {fileID: 9221669056140322766}
   - component: {fileID: 8188747516657018875}
-  - component: {fileID: 3847372278445381382}
   - component: {fileID: 8320130212270348918}
-  m_Layer: 0
+  - component: {fileID: 7032605359509075947}
+  m_Layer: 8
   m_Name: DefaultEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -76,8 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b,
-    type: 3}
+  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0.96981126, g: 0.41537198, b: 0.41537198, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -123,19 +122,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &3847372278445381382
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3449021975981694554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79e6ebbb40cb06b4fb946fa78926a379, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _enemyType: 0
 --- !u!114 &8320130212270348918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,3 +136,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _styles: []
   _spriteRenderer: {fileID: 9221669056140322766}
+--- !u!114 &7032605359509075947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3449021975981694554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd59ba45dfc75740858eff673eb7dfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyType: 0

@@ -5,6 +5,8 @@ public abstract class BasicAmmoController : MonoBehaviour, ICustomisable
 {
     private BasicAmmoConfig _ammoConfig;
 
+    private float _damage;
+
     private bool _isActive;
 
     public AmmoTypes AmmoType { get; private set; }
@@ -41,6 +43,11 @@ public abstract class BasicAmmoController : MonoBehaviour, ICustomisable
         }
     }
 
+    public void SetDamage(float damage)
+    {
+        _damage = damage;
+    }
+
     private void Update()
     {
         if(!_isActive) 
@@ -66,18 +73,23 @@ public abstract class BasicAmmoController : MonoBehaviour, ICustomisable
 
     public virtual void HandleCollision(Collider2D collision)
     {
-        if (!_isActive || !collision.gameObject.CompareTag(GameTags.instantiate.PlayerTag)) return;
+        if (!_isActive || !IsInteractableMask(collision.gameObject, _ammoConfig.EnemyLayers)) return;
 
         HitObject(collision.gameObject);
         DisableAmmo();
     }
 
+    private bool IsInteractableMask(GameObject obj, LayerMask mask)
+    {
+        return (mask.value & (1 << obj.layer)) != 0;
+    }
+
     public virtual void HitObject(GameObject hitedObject)
     {
-        IHitable hitablePlayer = hitedObject.GetComponent<IHitable>();
+        IHitable hitable = hitedObject.GetComponent<IHitable>();
 
-        if (hitablePlayer != null)
-            hitablePlayer.Hit();
+        if (hitable != null)
+            hitable.Hit(_damage);
     }
 
     public virtual void DisableAmmo()
@@ -86,8 +98,6 @@ public abstract class BasicAmmoController : MonoBehaviour, ICustomisable
         PoolObjectManager.instant.ammoPoolObjectManager.DisableAmmo(this, AmmoType);
     }
 
-
- 
 
     private IEnumerator Lifetimer()
     {

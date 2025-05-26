@@ -1,23 +1,19 @@
 using UnityEngine;
 
-public abstract class BasicEnemyController : MonoBehaviour, ICustomisable
+public class BasicEnemyController : MonoBehaviour, ICustomisable, IHitable
 {
     [SerializeField] private EnemyTypes _enemyType;
 
-    private BasicEnemyConfig _basicEnemyConfig;
+    private BasicEnemyConfig _enemyConfig;
     private bool _isActive;
+    private int _currentHealth;
+    private float _currentSpeed;
 
     public EnemyTypes EnemyType => _enemyType;
 
-    //"Minimum Y value of the collision normal to treat the contact." 
-    //"Y = -1 means the player hit the top of the enemy." 
-    //"Y = 1 means the player hit the bottom of the enemy."            
-    private const float _contactNormalThreshold = 0.1f;
-
-    public virtual void Init(BasicEnemyConfig basicEnemyConfig)
+    public virtual void Init(BasicEnemyConfig enemyConfig)
     {
-        _basicEnemyConfig = basicEnemyConfig;
-        SetCustomisation();
+        _enemyConfig = enemyConfig;
     }
 
     public virtual void Toggle(bool state)
@@ -27,7 +23,18 @@ public abstract class BasicEnemyController : MonoBehaviour, ICustomisable
         if(!_isActive)
         {
             StopAllCoroutines();
-        }    
+        }
+        else
+        {
+            SetCustomisation();
+            ConfigureParameters();
+        }
+    }
+
+    private void ConfigureParameters()
+    {
+        _currentHealth = 100;
+        _currentSpeed = _enemyConfig.MovementSpeed;
     }
 
     private void Update()
@@ -45,40 +52,45 @@ public abstract class BasicEnemyController : MonoBehaviour, ICustomisable
 
         HandleContact(collision);
     }
-
-    public virtual void UpdateEnemy() { }
-
     public virtual void HandleContact(Collision2D collision)
     {
-        if (!collision.gameObject.CompareTag(GameTags.instantiate.PlayerTag)) return;
-
-        foreach (ContactPoint2D contact in collision.contacts)
+        if (collision.gameObject.CompareTag(_enemyConfig.GroundTag))
         {
-            Vector2 contactNormal = contact.normal;
-
-            // hit from top
-            if (contactNormal.y < -_contactNormalThreshold)
+            Die();
+        }
+        else if(IsInteractableMask(collision.gameObject, _enemyConfig.PlayerLayer))
+        {
+            IHitable player = collision.gameObject.GetComponent<IHitable>();
+            if (player != null)
             {
-                if(_basicEnemyConfig.CanDie)
-                    Die();  
-
-                break;
-            }
-            // hit from botton
-            else if(contactNormal.y > _contactNormalThreshold)
-            {
-                HitPlayer(collision);
-                break;
+                player.Hit(_enemyConfig.BasicDamage);
             }
         }
     }
-
-    public virtual void HitPlayer(Collision2D collision)
+    private bool IsInteractableMask(GameObject obj, LayerMask mask)
     {
-        IHitable hitablePlayer = collision.gameObject.GetComponent<IHitable>();
+        return (mask.value & (1 << obj.layer)) != 0;
+    }
+    public virtual void UpdateEnemy() 
+    {
+        Move();
+    }
 
-        if (hitablePlayer != null)
-            hitablePlayer.Hit();
+    public virtual void Move()
+    {
+        Vector2 moveDir = new Vector2(_enemyConfig.MovementDirection.x, _enemyConfig.MovementDirection.y).normalized;
+        transform.Translate(moveDir * _currentSpeed * Time.deltaTime);
+    }
+    
+    public void Hit(float damage = 0)
+    {
+        _currentHealth -= Mathf.RoundToInt(damage);
+
+        if (_currentHealth <= 0)
+        {
+            _currentHealth = 0;
+            Die();
+        }
     }
 
     public virtual void Die()

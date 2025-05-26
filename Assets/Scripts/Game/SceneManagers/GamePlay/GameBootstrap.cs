@@ -33,7 +33,10 @@ public class GameBootstrap : MonoBehaviour
     private void BuildScene()
     {
         _sceneBuilder.BuildScene();
-        _sceneBuilder.Player.GetComponent<CharacterPlayerController>().Init(_gameConfig.PlayerConfig);
+
+        CharacterPlayerController playerController = _sceneBuilder.Player.GetComponent<CharacterPlayerController>();
+        playerController.Init(_gameConfig.PlayerConfig);
+        playerController.Toogle(true);
     }
 
     private void StartGame()
@@ -67,7 +70,6 @@ public class GameBootstrap : MonoBehaviour
     {
         PoolObjectManagerInitDataKit poolObjectManagerInitDataKit = new PoolObjectManagerInitDataKit();
 
-        poolObjectManagerInitDataKit.platforms = _gameConfig.PlatformPrefabs;
         poolObjectManagerInitDataKit.enemies = _gameConfig.EnemyPrefabs;
         poolObjectManagerInitDataKit.ammunitions = _gameConfig.AmmoPrefabs;
 

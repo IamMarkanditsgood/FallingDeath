@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
@@ -6,6 +7,7 @@ public class CharacterPlayerController : MonoBehaviour, IHitable, ICustomisable
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private CharacterMovementManager _movementEngine;
     [SerializeField] private PlayerInputSystem _playerInputSystem;
+    [SerializeField] private Transform _shootingPos;
     
     private CharacterPlayerConfig _playerConfig;
 
@@ -13,17 +15,25 @@ public class CharacterPlayerController : MonoBehaviour, IHitable, ICustomisable
     private Collider2D _playerCollider;
 
     private float _currentHealth;
+    private float _currentDamage;
+    private float _currentSpeed;
+    private float _currentShootingSpeed;
+
     private float _screenWidthInUnits;
     private float _horizontalInput;
 
-    private void Start()
-    {
-        Subscribe();
-    }
+    private bool _isActive;
+
+    private Coroutine _shooting;
 
     private void OnDestroy()
     {
-        Unsubscribe();
+        Toogle(false);
+    }
+
+    private void OnDisable()
+    {
+        Toogle(false);
     }
 
     public void Init(CharacterPlayerConfig characterPlayerConfig)
@@ -41,9 +51,31 @@ public class CharacterPlayerController : MonoBehaviour, IHitable, ICustomisable
         _playerInputSystem.Init();
 
         _currentHealth = _playerConfig.BasicHealth;
+        _currentSpeed = _playerConfig.MoveSpeed;
+        _currentDamage = _playerConfig.BasicDamage;
+        _currentShootingSpeed = _playerConfig.BasicShootingSpeed;
 
         SetCustomisation();
     }
+
+    public void Toogle(bool state)
+    {
+        _isActive = state;
+
+        if(_isActive)
+        {
+            Subscribe();
+
+            _shooting = StartCoroutine(Shooting());
+        }
+        else
+        {
+            Unsubscribe();
+
+            StopCoroutine(_shooting);
+        }
+    }
+
     public void SetCustomisation()
     {
         ICustomizer customizer = GetComponent<ICustomizer>();
@@ -62,6 +94,8 @@ public class CharacterPlayerController : MonoBehaviour, IHitable, ICustomisable
 
     private void Update()
     {
+        if(!_isActive) return;
+
         _playerInputSystem.UpdateInput();
 
         CalculateScreenBounds();
@@ -70,17 +104,20 @@ public class CharacterPlayerController : MonoBehaviour, IHitable, ICustomisable
 
     private void FixedUpdate()
     {
+        if (!_isActive) return;
         // Physics-related movement in FixedUpdate
-        _movementEngine.Move(_horizontalInput, _playerConfig.MoveSpeed);
+        _movementEngine.Move(_horizontalInput, _currentSpeed);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (!_isActive) return;
         HandleCollision(collision);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!_isActive) return;
         HandleTrigger(collision);
     }
 
@@ -128,12 +165,14 @@ public class CharacterPlayerController : MonoBehaviour, IHitable, ICustomisable
 
     private void Die()
     {
+        if (!_isActive) return;
         Debug.Log("Player Died!");
         Time.timeScale = 0;
     }
 
     public void Hit(float damage = 0)
     {
+        if (!_isActive) return;
         _currentHealth -= damage;
 
         if (_currentHealth <= 0)
@@ -143,4 +182,15 @@ public class CharacterPlayerController : MonoBehaviour, IHitable, ICustomisable
         }
     }
     
+    private IEnumerator Shooting()
+    {
+        if (!_isActive) StopCoroutine(_shooting);
+
+        BasicAmmoController ammo = PoolObjectManager.instant.ammoPoolObjectManager.GetAmmo(AmmoTypes.bullet);
+        ammo.gameObject.transform.position = _shootingPos.position;
+        ammo.SetDamage(_currentDamage);
+        ammo.Toggle(true);
+
+        yield return new WaitForSeconds(_currentShootingSpeed);
+    }
 }
