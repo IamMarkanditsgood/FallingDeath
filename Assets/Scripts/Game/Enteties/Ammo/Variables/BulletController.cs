@@ -5,9 +5,9 @@ public class BulletController : BasicAmmoController
 {
     private DefaultBulletConfig defaultBulletConfig;
 
-    public override void Init(BasicAmmoConfig ammoConfig)
+    public override void Init()
     {
-        base.Init(ammoConfig);
+        base.Init();
 
         defaultBulletConfig = ammoConfig as DefaultBulletConfig;
 
@@ -17,15 +17,4 @@ public class BulletController : BasicAmmoController
         }
     }
 
-    public override void UpdateAmmo()
-    {
-        base.UpdateAmmo();
-        MoveBullet();
-    }
-
-    private void MoveBullet()
-    {
-        Vector2 moveDir = new Vector2(defaultBulletConfig.MovementDirection.x, defaultBulletConfig.MovementDirection.y).normalized;
-        transform.Translate(moveDir * defaultBulletConfig.Speed * Time.deltaTime);
-    }
 }

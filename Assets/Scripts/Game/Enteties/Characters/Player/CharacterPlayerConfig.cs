@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Player", menuName = "ScriptableObjects/GamePlayManager/Enteties/Character/Player", order = 1)]
 public class CharacterPlayerConfig : ScriptableObject
 {
-
+    [SerializeField] private AmmoTypes _bullet;
     [Tooltip("The horizontal movement speed of the player.")]
     [SerializeField] private float _moveSpeed = 5f;
 
@@ -14,6 +14,7 @@ public class CharacterPlayerConfig : ScriptableObject
 
     [SerializeField] private LayerMask _boosterLayers;
 
+    public AmmoTypes Bullet => _bullet;
     public float MoveSpeed => _moveSpeed;
     public float BasicHealth => _basicHealth;
     public float BasicDamage => _basicDamage;

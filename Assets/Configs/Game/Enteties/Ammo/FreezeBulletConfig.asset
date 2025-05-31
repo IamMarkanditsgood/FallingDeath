@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d06e7761b581e6e41a0d8efb497ca285, type: 3}
+  m_Name: FreezeBulletConfig
+  m_EditorClassIdentifier: 
+  _ammoType: 1
+  _enemyLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  _lifeTime: 5
+  _movementDirection: {x: 0, y: 1}
+  _speed: 5
+  _basicFreezTime: 0
+  _basicFreezPercent: 0

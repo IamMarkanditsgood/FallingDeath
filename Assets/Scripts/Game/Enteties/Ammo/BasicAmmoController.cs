@@ -3,20 +3,18 @@ using UnityEngine;
 
 public abstract class BasicAmmoController : MonoBehaviour, ICustomisable
 {
-    private BasicAmmoConfig _ammoConfig;
+    [SerializeField] protected BasicAmmoConfig ammoConfig;
 
     private float _damage;
 
     private bool _isActive;
 
-    public AmmoTypes AmmoType { get; private set; }
+    public AmmoTypes AmmoType => ammoConfig.AmmoType;
 
     private Coroutine _lifeTime;
 
-    public virtual void Init(BasicAmmoConfig ammoConfig)
+    public virtual void Init()
     {
-        _ammoConfig = ammoConfig;
-        AmmoType = _ammoConfig.AmmoType;
         SetCustomisation();
     }
     public void SetCustomisation()
@@ -69,11 +67,17 @@ public abstract class BasicAmmoController : MonoBehaviour, ICustomisable
         Move();
     }
 
-    public virtual void Move() { if (!_isActive) return; }
+    public virtual void Move() 
+    { 
+        if (!_isActive) return;
+
+        Vector2 moveDir = new Vector2(ammoConfig.MovementDirection.x, ammoConfig.MovementDirection.y).normalized;
+        transform.Translate(moveDir * ammoConfig.Speed * Time.deltaTime);
+    }
 
     public virtual void HandleCollision(Collider2D collision)
     {
-        if (!_isActive || !IsInteractableMask(collision.gameObject, _ammoConfig.EnemyLayers)) return;
+        if (!_isActive || !IsInteractableMask(collision.gameObject, ammoConfig.EnemyLayers)) return;
 
         HitObject(collision.gameObject);
         DisableAmmo();
@@ -101,7 +105,7 @@ public abstract class BasicAmmoController : MonoBehaviour, ICustomisable
 
     private IEnumerator Lifetimer()
     {
-        yield return new WaitForSeconds(_ammoConfig.LifeTime);
+        yield return new WaitForSeconds(ammoConfig.LifeTime);
         DisableAmmo();
     }
 }

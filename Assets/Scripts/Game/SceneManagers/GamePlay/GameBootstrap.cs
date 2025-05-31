@@ -30,6 +30,11 @@ public class GameBootstrap : MonoBehaviour
         _gamePlayManager.DeInit();
     }
 
+    private void Update()
+    {
+        _gamePlayManager.UpdateGamePlay();
+    }
+
     private void BuildScene()
     {
         _sceneBuilder.BuildScene();

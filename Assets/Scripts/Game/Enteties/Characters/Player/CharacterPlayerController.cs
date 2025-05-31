@@ -184,13 +184,22 @@ public class CharacterPlayerController : MonoBehaviour, IHitable, ICustomisable
     
     private IEnumerator Shooting()
     {
-        if (!_isActive) StopCoroutine(_shooting);
+        while (true)
+        {
+            if (_isActive)
+            {
+                MakeShoot();
 
-        BasicAmmoController ammo = PoolObjectManager.instant.ammoPoolObjectManager.GetAmmo(AmmoTypes.bullet);
+                yield return new WaitForSeconds(_currentShootingSpeed);
+            }
+        }
+    }
+
+    private void MakeShoot()
+    {
+        BasicAmmoController ammo = PoolObjectManager.instant.ammoPoolObjectManager.GetAmmo(_playerConfig.Bullet);
         ammo.gameObject.transform.position = _shootingPos.position;
         ammo.SetDamage(_currentDamage);
         ammo.Toggle(true);
-
-        yield return new WaitForSeconds(_currentShootingSpeed);
     }
 }

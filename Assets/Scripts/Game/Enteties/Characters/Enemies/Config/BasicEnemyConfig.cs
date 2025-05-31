@@ -11,7 +11,8 @@ public class BasicEnemyConfig : ScriptableObject
     [SerializeField] private Vector2 _movementDirection;
     [SerializeField, TagSelector] private string _groundTag;
     [SerializeField] private LayerMask _playerLayer;
-    [SerializeField] private float _basicDamage;    
+    [SerializeField] private float _basicDamage;
+    [SerializeField] private Vector2 _basicHealthRange;
 
     public EnemyTypes EnemyType => _enemyType;
     public bool CanDie => _canDie;
@@ -20,4 +21,5 @@ public class BasicEnemyConfig : ScriptableObject
     public string GroundTag => _groundTag;
     public LayerMask PlayerLayer => _playerLayer;
     public float BasicDamage => _basicDamage;
+    public Vector2 BasicHealthRange => _basicHealthRange;
 }

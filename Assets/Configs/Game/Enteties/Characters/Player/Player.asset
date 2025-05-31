@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7c10744a95e4bb4eac0c18cd2ab7c72, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
+  _bullet: 2
   _moveSpeed: 10
   _basicHealth: 1
   _basicDamage: 1

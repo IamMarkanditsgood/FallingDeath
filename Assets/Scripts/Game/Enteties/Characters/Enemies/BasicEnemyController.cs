@@ -1,19 +1,23 @@
+using TMPro;
 using UnityEngine;
 
-public class BasicEnemyController : MonoBehaviour, ICustomisable, IHitable
+public class BasicEnemyController : MonoBehaviour, ICustomisable, IHitable, IFreezable, IBurnable
 {
-    [SerializeField] private EnemyTypes _enemyType;
+    [SerializeField] private BasicEnemyConfig _enemyConfig;
 
-    private BasicEnemyConfig _enemyConfig;
+    [Header("UI")]
+    [SerializeField] private Canvas _enemyCanvas;
+    [SerializeField] private TMP_Text _health;
+
     private bool _isActive;
     private int _currentHealth;
     private float _currentSpeed;
 
-    public EnemyTypes EnemyType => _enemyType;
+    public EnemyTypes EnemyType => _enemyConfig.EnemyType;
 
-    public virtual void Init(BasicEnemyConfig enemyConfig)
+    public virtual void Init()
     {
-        _enemyConfig = enemyConfig;
+        _enemyCanvas.worldCamera = Camera.main;       
     }
 
     public virtual void Toggle(bool state)
@@ -33,8 +37,12 @@ public class BasicEnemyController : MonoBehaviour, ICustomisable, IHitable
 
     private void ConfigureParameters()
     {
-        _currentHealth = 100;
+        float randomHealth = Random.Range(_enemyConfig.BasicHealthRange.x, _enemyConfig.BasicHealthRange.y);
+        _currentHealth = Mathf.RoundToInt(randomHealth);
+
         _currentSpeed = _enemyConfig.MovementSpeed;
+
+        UpdateHealthUI();
     }
 
     private void Update()
@@ -45,22 +53,23 @@ public class BasicEnemyController : MonoBehaviour, ICustomisable, IHitable
         UpdateEnemy();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collider)
     {
         if (!_isActive)
             return;
 
-        HandleContact(collision);
+        HandleTriggerContact(collider);
     }
-    public virtual void HandleContact(Collision2D collision)
+
+    public virtual void HandleTriggerContact(Collider2D collider)
     {
-        if (collision.gameObject.CompareTag(_enemyConfig.GroundTag))
+        if (collider.CompareTag(_enemyConfig.GroundTag))
         {
             Die();
         }
-        else if(IsInteractableMask(collision.gameObject, _enemyConfig.PlayerLayer))
+        else if (IsInteractableMask(collider.gameObject, _enemyConfig.PlayerLayer))
         {
-            IHitable player = collision.gameObject.GetComponent<IHitable>();
+            IHitable player = collider.GetComponent<IHitable>();
             if (player != null)
             {
                 player.Hit(_enemyConfig.BasicDamage);
@@ -91,12 +100,13 @@ public class BasicEnemyController : MonoBehaviour, ICustomisable, IHitable
             _currentHealth = 0;
             Die();
         }
+        UpdateHealthUI();
     }
 
     public virtual void Die()
     {
         Toggle(false);
-        PoolObjectManager.instant.enemyPoolObjectManager.DisableEnemy(this, _enemyType);
+        PoolObjectManager.instant.enemyPoolObjectManager.DisableEnemy(this, _enemyConfig.EnemyType);
     }
 
     public void SetCustomisation()
@@ -105,5 +115,18 @@ public class BasicEnemyController : MonoBehaviour, ICustomisable, IHitable
 
         if (customizer != null)
             customizer.Customize();
+    }
+
+    private void UpdateHealthUI()
+    {
+        _health.text = _currentHealth.ToString();
+    }
+
+    public void Freeze(float time, float speedProcent)
+    {
+    }
+
+    public void SetFire(float damage, float time)
+    {
     }
 }

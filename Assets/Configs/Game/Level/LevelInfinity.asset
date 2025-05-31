@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerConfig: {fileID: 11400000, guid: 18a535e496018a14f8c3dcb027028078, type: 2}
   _cameraConfig: {fileID: 11400000, guid: 0216805fc60414c438c9705e20c5edf2, type: 2}
-  _enemyConfigs:
-  - {fileID: 11400000, guid: 67db7f886657bdd4bbbe225cb3adf10a, type: 2}
-  _ammoConfigs:
-  - {fileID: 11400000, guid: 51259306b49c28f46b5436ad177d5c74, type: 2}
   _enemyPrefabs:
-  - {fileID: 7032605359509075947, guid: 0a19e2df7b8340a4c84d3d2574ed410d, type: 3}
+  - {fileID: 6414924438232740142, guid: 0a19e2df7b8340a4c84d3d2574ed410d, type: 3}
+  - {fileID: 1285272431215637542, guid: 3f9006fb79df87f42adac2ac68e2afc9, type: 3}
+  - {fileID: 5376848001268275762, guid: 019317c31b81b694abcd01f26fc5d4c4, type: 3}
   _ammoPrefabs:
   - {fileID: 2169887624156322651, guid: 94c35ebeb47f5f247bc2e9a2ed3b8a26, type: 3}
+  - {fileID: 5848727007179701144, guid: ef0d7cf7a59008d45a409a234488e71d, type: 3}
+  - {fileID: 5959588769966071682, guid: 71afd25a55bbdde459974edc11c7eeda, type: 3}
   _cameraPrefab: {fileID: 3897284644736826946, guid: 3d810099f01dcc74bb1bb230c1fbe1d3, type: 3}
   _playerPref: {fileID: 3214979398145905463, guid: ce3bda85d1eefc74696af0d96c08adb7, type: 3}
-  _objectGarbageCollectorInterval: 15
-  _spawnIntervalTimer: 0.05
+  _spawnIntervalTimer: 1
   _useManualXBounds: 0
   _manualMinX: -5
   _manualMaxX: 5
+  _spawnHeightOffset: 50
